@@ -37,6 +37,5 @@ mvn clean install
 
 docker build -t to-do-list .
 
-docker run -p 9090:8080 --name to-do-list --net spring-network 
-        -e MYSQL_HOST=mysqldb -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_PORT=3306 to-do-list
+docker run -p 9090:8080 --name to-do-list --net spring-network -e MYSQL_HOST=mysqldb -e MYSQL_USER=root -e MYSQL_PASSWORD=root -e MYSQL_PORT=3306 to-do-list
 
