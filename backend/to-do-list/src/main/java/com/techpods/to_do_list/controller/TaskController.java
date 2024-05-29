@@ -10,6 +10,7 @@ import com.techpods.to_do_list.entity.Task;
 
 @RestController
 @RequestMapping("/task")
+@CrossOrigin(origins = "http://localhost:3000")
 public class TaskController {
 
     @Autowired
