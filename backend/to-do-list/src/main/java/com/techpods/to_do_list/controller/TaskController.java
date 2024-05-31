@@ -2,7 +2,7 @@ package com.techpods.to_do_list.controller;
 
 import java.util.List;
 
-import com.techpods.to_do_list.service.TaskService;
+import com.techpods.to_do_list.service.intrf.TaskServiceI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import com.techpods.to_do_list.entity.Task;
 public class TaskController {
 
     @Autowired
-    private TaskService taskService;
+    private TaskServiceI taskService;
 
     @GetMapping("/findAll")
     List<Task> getAllTasks(){
