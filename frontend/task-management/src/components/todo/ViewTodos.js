@@ -3,6 +3,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 function Todos() {
+  var baseUrl = "http://localhost:9090/task";
+
   const [tasks, setTasks] = useState([]);
   const [changed, setChanged] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -12,7 +14,7 @@ function Todos() {
     const loadData = async () => {
       let response = null;
       try {
-        let url = `http://localhost:9090/task/findAll`;
+        var url = `${baseUrl}/findAll`;
 
         response = await axios.get(url);
       } catch (error) {
@@ -24,6 +26,22 @@ function Todos() {
         return;
       }
       setErrorMessage("");
+
+      if (filter === "Completed") {
+        console.info("filter completed");
+        response.data = response.data.filter((task) => {
+          return task.completed === true;
+        });
+      }
+
+      if (filter === "Not Completed") {
+        console.info("filter not completed");
+
+        response.data = response.data.filter((task) => {
+          return task.completed === false;
+        });
+      }
+
       setTasks(response.data);
     };
 
@@ -33,8 +51,8 @@ function Todos() {
   const filterControl = () => {
     return (
       <center>
-        <div className="col-6 offset-8">
-          <label>Show</label>
+        <div className="col-6 offset-9">
+          <label style={{ marginRight: "10px" }}>Show</label>
           <select value={filter} onChange={(e) => setFilter(e.target.value)}>
             <option value="All">All</option>
             <option value="Completed">Completed</option>
@@ -87,11 +105,24 @@ function Todos() {
     );
   };
 
+  const getPriorityColor = (priority) => {
+    switch (priority) {
+      case "LOW":
+        return "green";
+      case "MEDIUM":
+        return "blue";
+      case "HIGH":
+        return "red";
+      default:
+        return "black";
+    }
+  };
+
   return (
     <div className="container">
-      <h1 className="text-center">Todo List</h1>
+      <h1 className="text-center">List of tasks</h1>
 
-      {/* {showErrorMessage()} */}
+      {showErrorMessage()}
 
       {filterControl()}
 
@@ -102,6 +133,7 @@ function Todos() {
             <th>Description</th>
             <th>Completed</th>
             <th>Priority</th>
+            <th>Mark Completed</th>
             <th>Update</th>
             <th>Delete</th>
           </tr>
@@ -109,11 +141,13 @@ function Todos() {
         <tbody>
           {tasks.map((task) => {
             return (
-              <tr className={task.completed ? "completed" : ""} key={task.id}>
+              <tr className={task.completed ? "true" : ""} key={task.id}>
                 <td>{task.name}</td>
                 <td>{task.description}</td>
                 <td>{task.completed.toString()}</td>
-                <td>{task.priority}</td>
+                <td style={{ color: getPriorityColor(task.priority) }}>
+                  {task.priority}
+                </td>
                 <td>
                   <button
                     className="btn btn-success"
@@ -128,15 +162,21 @@ function Todos() {
                   </Link>
                 </td>
                 <td>
-                  <Link to={{ pathname: `/delete/${task.id}` }}>
-                    <button className="btn btn-danger">Delete</button>
-                  </Link>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => deleteTodo(task.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      <Link to={{ pathname: `/add` }}>
+        <button className="btn btn-primary">Add new task</button>
+      </Link>
     </div>
   );
 }

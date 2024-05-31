@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useHistory } from "react-router-dom";
 
 function AddTodo() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [completed, setCompleted] = useState("");
-  const [priority, setPriority] = useState("");
+  const [completed, setCompleted] = useState("false");
+  const [priority, setPriority] = useState("LOW");
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -14,7 +13,7 @@ function AddTodo() {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:9090/task", {
+      await axios.post("http://localhost:9090/task/create", {
         name,
         description,
         completed,
@@ -30,12 +29,7 @@ function AddTodo() {
       return;
     }
 
-    setName("");
-    setDescription("");
-    setCompleted("false");
-    setPriority("LOW");
-    setErrorMessage("");
-    setMessage("Todo successfully created");
+    setMessage("New task is successfully created.");
   };
 
   useEffect(() => {
@@ -68,7 +62,7 @@ function AddTodo() {
   return (
     <div className="container">
       <form onSubmit={onSubmit}>
-        <h1>Add New Todo</h1>
+        <h1>Add New Task</h1>
         <div className="form-group">
           <label>Name</label>
           <input
@@ -77,11 +71,40 @@ function AddTodo() {
             placeholder="Name"
             className="form-control"
           ></input>
+          <label>Description</label>
+          <input
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Description"
+            className="form-control"
+          ></input>
+          <label>Completed</label>
+          <input
+            value={completed}
+            onChange={(e) => setCompleted(e.target.value)}
+            placeholder="completed"
+            className="form-control"
+          ></input>
+          <label>Priority</label>
+          <select
+            value={priority}
+            onChange={(e) => setPriority(e.target.value)}
+            className="form-control"
+          >
+            <option value="" disabled>
+              Select priority
+            </option>
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+          </select>
         </div>
-        <button className="btn btn-primary">Add Todo Task</button>
+        <button className="btn btn-primary">Add New Task</button>
       </form>
-      {showMessage()}
-      {showErrorMessage()}
+      <div style={{ marginTop: "20px" }}>
+        {showMessage()}
+        {showErrorMessage()}
+      </div>
     </div>
   );
 }

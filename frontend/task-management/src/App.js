@@ -5,6 +5,7 @@ import Todos from "./components/todo/ViewTodos";
 import AddTodo from "./components/todo/AddTodo";
 import UpdateTodo from "./components/todo/UpdateTodo";
 import NotFound from "./components/page/NotFound";
+import Header from "./components/header/Header";
 
 import "./bootstrap.min.css";
 import "./App.css";
@@ -13,6 +14,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Header />
         <div>
           <Switch>
             <Route exact path="/" render={(props) => <Todos {...props} />} />
@@ -25,6 +27,11 @@ function App() {
               exact
               path="/add"
               render={(props) => <AddTodo {...props} />}
+            />
+            <Route
+              exact
+              path="/update/:id"
+              render={(props) => <UpdateTodo {...props} />}
             />
             <Route
               exact
